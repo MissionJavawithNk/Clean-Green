@@ -47,10 +47,10 @@ const ActivityReporter = () => {
               style={{
                 width: '100%',
                 padding: '0.75rem',
-                background: 'var(--glass)',
-                border: '1px solid var(--glass-border)',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: '0.5rem',
-                color: 'white'
+                color: '#0f172a'
               }}
             >
               <option value="SEGREGATION">Proper Segregation (+10)</option>

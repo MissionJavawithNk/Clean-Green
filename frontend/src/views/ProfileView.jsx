@@ -1,121 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { Award, Calendar, History, TrendingUp, CheckCircle, XCircle, Clock, Share2 } from 'lucide-react';
-import ImpactCard from '../components/ImpactCard';
+import React from 'react';
+import { Award, Zap, Shield, Recycle, Trash2, Droplets, Leaf, Share2, Download, Globe } from 'lucide-react';
+
+const Badge = ({ icon: Icon, title, desc, unlocked }) => (
+  <div style={{ 
+    padding: '1.5rem', 
+    background: unlocked ? '#f0fdf4' : '#f8fafc', 
+    borderRadius: '1rem', 
+    border: unlocked ? '1px solid #bdf4d4' : '1px solid #f1f5f9',
+    textAlign: 'center',
+    opacity: unlocked ? 1 : 0.5
+  }}>
+    <div style={{ 
+      width: '56px', height: '56px', 
+      background: unlocked ? '#10b981' : '#cbd5e1', 
+      borderRadius: '50%', margin: '0 auto 1rem', 
+      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white'
+    }}>
+      <Icon size={28} />
+    </div>
+    <h4 style={{ fontWeight: 700, fontSize: '0.9rem', color: unlocked ? '#064e3b' : '#64748b' }}>{title}</h4>
+    <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>{desc}</p>
+  </div>
+);
 
 const ProfileView = ({ user }) => {
-  const [showCard, setShowCard] = useState(false);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const mockHistory = [
-    { id: 1, category: 'SEGREGATION', points: 10, status: 'APPROVED', date: 'Today, 08:30 AM', reason: 'Waste segregation verified' },
-    { id: 2, category: 'RECYCLING', points: 15, status: 'PENDING', date: 'Yesterday', reason: 'Plastic bottles recycling' },
-    { id: 3, category: 'SEGREGATION', points: 10, status: 'APPROVED', date: '2 days ago', reason: 'Waste segregation verified' },
-    { id: 4, category: 'REPORTING', points: 3, status: 'REJECTED', date: '3 days ago', reason: 'Duplicate report of bin overflow' },
+  const metrics = [
+    { label: 'Recycled', value: '124kg', icon: Recycle, color: '#059669' },
+    { label: 'Organic', value: '45kg', icon: Droplets, color: '#3b82f6' },
+    { label: 'E-Waste', value: '3.2kg', icon: Trash2, color: '#ef4444' }
   ];
 
   const badges = [
-    { id: 1, name: 'Eco Starter', icon: '🌱', date: 'May 1st' },
-    { id: 2, name: 'Plastic Free', icon: '🚫', date: 'May 4th' },
-    { id: 3, name: 'Consistency King', icon: '👑', date: 'May 7th' },
-    { id: 4, name: 'Early Bird', icon: '🌅', date: 'May 8th' },
+    { icon: Leaf, title: 'Seedling', desc: '1st Activity Logged', unlocked: true },
+    { icon: Zap, title: 'Fast Mover', desc: '5 logs in 1 week', unlocked: true },
+    { icon: Award, title: 'Waste Warrior', desc: 'Reach 1000 Points', unlocked: true },
+    { icon: Shield, title: 'Guardian', desc: 'Verified Resident', unlocked: true },
+    { icon: Globe, title: 'Earth Hero', desc: 'Top 1% in District', unlocked: false }
   ];
 
-  useEffect(() => {
-    setTimeout(() => {
-      setHistory(mockHistory);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'APPROVED': return <CheckCircle size={16} color="var(--primary)" />;
-      case 'REJECTED': return <XCircle size={16} color="#ef4444" />;
-      default: return <Clock size={16} color="var(--accent)" />;
-    }
-  };
-
   return (
-    <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: '300px 1fr', gap: '2rem', alignItems: 'start' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        <div className="glass-card" style={{ textAlign: 'center', padding: '2rem' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'linear-gradient(var(--primary), var(--secondary))', margin: '0 auto 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>
-            {user.username[0].toUpperCase()}
-          </div>
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{user.username}</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Green Warrior Level 4</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-            <div style={{ background: 'var(--glass)', padding: '0.5rem 1rem', borderRadius: '0.5rem' }}>
-              <span style={{ display: 'block', fontSize: '1.2rem', fontWeight: 800 }}>12</span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>BADGES</span>
+    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start' }}>
+        <div style={{ flex: '1' }}>
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginBottom: '3rem' }}>
+            <div style={{ width: '100px', height: '100px', borderRadius: '50%', background: '#065f46', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '2.5rem', fontWeight: 800 }}>
+              {user.username[0].toUpperCase()}
             </div>
-            <div style={{ background: 'var(--glass)', padding: '0.5rem 1rem', borderRadius: '0.5rem' }}>
-              <span style={{ display: 'block', fontSize: '1.2rem', fontWeight: 800 }}>#12</span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>RANK</span>
+            <div>
+              <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#064e3b' }}>{user.username}</h2>
+              <p style={{ color: '#64748b' }}>Resident since May 2026 • <b>Verified</b></p>
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <button className="btn-action" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Share2 size={16} /> Share Impact
+                </button>
+                <button className="btn-ghost" style={{ border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Download size={16} /> Certificate
+                </button>
+              </div>
             </div>
           </div>
-          <button 
-            onClick={() => setShowCard(!showCard)}
-            style={{ 
-              width: '100%', padding: '0.75rem', background: 'var(--glass)', 
-              border: '1px solid var(--primary)', color: 'var(--primary)', 
-              borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', 
-              alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-              fontWeight: 600
-            }}
-          >
-            <Share2 size={18} /> {showCard ? 'Close Impact Card' : 'Generate Impact Card'}
-          </button>
-        </div>
 
-        {showCard && (
-          <ImpactCard user={user} score={2840} rank={12} />
-        )}
-
-        <div className="glass-card">
-          <h4 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Award size={18} color="var(--accent)" /> Badges
-          </h4>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-            {badges.map(badge => (
-              <div key={badge.id} style={{ background: 'var(--glass)', padding: '1rem', borderRadius: '0.75rem', textAlign: 'center' }}>
-                <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '0.25rem' }}>{badge.icon}</span>
-                <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>{badge.name}</span>
+          <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', color: '#64748b', marginBottom: '1.5rem', letterSpacing: '0.05em' }}>Your Impact Metrics</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '4rem' }}>
+            {metrics.map(m => (
+              <div key={m.label} style={{ padding: '1.5rem', border: '1px solid #f1f5f9', borderRadius: '1rem' }}>
+                <m.icon size={20} color={m.color} style={{ marginBottom: '0.75rem' }} />
+                <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{m.value}</div>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>{m.label}</div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="glass-card">
-        <h3 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <History color="var(--primary)" /> Impact History
-        </h3>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {history.map(item => (
-            <div key={item.id} style={{ display: 'flex', gap: '1.5rem', position: 'relative', paddingBottom: '1.5rem', borderLeft: '2px solid var(--glass-border)', paddingLeft: '1.5rem', marginLeft: '0.75rem' }}>
-              <div style={{ position: 'absolute', left: '-11px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: 'var(--bg-dark)', border: '2px solid var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-                {getStatusIcon(item.status)}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                  <h4 style={{ color: 'var(--primary)' }}>{item.category}</h4>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{item.date}</span>
-                </div>
-                <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>{item.reason}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.8rem', padding: '0.2rem 0.5rem', background: 'var(--glass)', borderRadius: '4px', color: 'var(--text-muted)' }}>
-                    {item.status}
-                  </span>
-                  <span style={{ fontWeight: 800, color: item.status === 'REJECTED' ? '#ef4444' : 'var(--primary)' }}>
-                    {item.points > 0 ? `+${item.points}` : item.points} pts
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div style={{ width: '350px' }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', color: '#64748b', marginBottom: '1.5rem', letterSpacing: '0.05em' }}>Unlocked Badges</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+            {badges.map(b => <Badge key={b.title} {...b} />)}
+          </div>
         </div>
       </div>
     </div>

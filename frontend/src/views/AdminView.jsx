@@ -1,87 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Clock, Filter, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, X, AlertCircle, Clock, ShieldCheck, User } from 'lucide-react';
 
 const AdminView = () => {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [requests, setRequests] = useState([
+    { id: 1, user: 'Flat 402 - Green Villa', type: 'Plastic Recycling', weight: '5kg', date: 'Today, 09:15 AM', status: 'Pending' },
+    { id: 2, user: 'Flat 101 - Serene Oaks', type: 'Organic Waste', weight: '3kg', date: 'Yesterday', status: 'Pending' },
+    { id: 3, user: 'Flat 305 - Sky High', type: 'E-Waste', weight: '1.5kg', date: '2 days ago', status: 'Pending' }
+  ]);
 
-  const mockReports = [
-    { id: 101, householdName: 'Flat 402 - Green Villa', category: 'SEGREGATION', points: 10, reason: 'Photo verified disposal', status: 'PENDING', time: '2h ago' },
-    { id: 102, householdName: 'Flat 101 - Serene Oaks', category: 'RECYCLING', points: 15, reason: '10kg plastic submission', status: 'PENDING', time: '5h ago' },
-    { id: 103, householdName: 'Flat 202 - Sky Tower', category: 'REPORTING', points: 3, reason: 'Overflowing bin reported', status: 'PENDING', time: '1d ago' },
-  ];
-
-  useEffect(() => {
-    // In real app: fetch('/api/admin/pending')
-    setTimeout(() => {
-      setReports(mockReports);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const handleAction = (id, action) => {
-    setReports(reports.filter(r => r.id !== id));
-    // In real app: fetch(`/api/admin/${action}/${id}`, { method: 'POST' })
+  const handleAction = (id, newStatus) => {
+    setRequests(requests.map(req => req.id === id ? { ...req, status: newStatus } : req));
   };
 
+  const pendingCount = requests.filter(r => r.status === 'Pending').length;
+
   return (
-    <div style={{ marginTop: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Clock color="var(--primary)" /> Pending Verifications
-        </h2>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-            <input 
-              placeholder="Search households..." 
-              style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', padding: '0.5rem 1rem 0.5rem 2.25rem', borderRadius: '0.5rem', color: 'white' }}
-            />
-          </div>
-          <button style={{ background: 'var(--glass)', border: '1px solid var(--glass-border)', padding: '0.5rem 1rem', borderRadius: '0.5rem', color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Filter size={16} /> Filter
-          </button>
+    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+        <div>
+          <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#064e3b' }}>Municipal Console</h2>
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Verify and approve community waste logs.</p>
+        </div>
+        <div style={{ background: '#ecfdf5', color: '#065f46', padding: '0.5rem 1rem', borderRadius: '2rem', fontWeight: 700, fontSize: '0.85rem' }}>
+          {pendingCount} Pending Requests
         </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {reports.map(report => (
-          <div key={report.id} className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem' }}>
+        {requests.map(req => (
+          <div key={req.id} style={{ 
+            padding: '1.5rem', 
+            background: 'white', 
+            border: '1px solid #f1f5f9', 
+            borderRadius: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            opacity: req.status !== 'Pending' ? 0.6 : 1,
+            transition: 'all 0.3s'
+          }}>
             <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-              <div style={{ width: '48px', height: '48px', background: 'var(--glass)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: 'var(--primary)' }}>
-                {report.points}+
+              <div style={{ width: '48px', height: '48px', background: '#f8fafc', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                <User size={20} />
               </div>
               <div>
-                <h4 style={{ fontSize: '1.1rem' }}>{report.householdName}</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                  <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{report.category}</span> • {report.reason}
-                </p>
+                <div style={{ fontWeight: 700, fontSize: '1rem' }}>{req.user}</div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b' }}>
+                  {req.type} • <b>{req.weight}</b> • {req.date}
+                </div>
               </div>
             </div>
-            
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginRight: '1rem' }}>{report.time}</span>
-              <button 
-                onClick={() => handleAction(report.id, 'approve')}
-                style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
-              >
-                <CheckCircle size={18} /> Approve
-              </button>
-              <button 
-                onClick={() => handleAction(report.id, 'reject')}
-                style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444', padding: '0.5rem 1rem', borderRadius: '0.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}
-              >
-                <XCircle size={18} /> Reject
-              </button>
-            </div>
+
+            {req.status === 'Pending' ? (
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button 
+                  onClick={() => handleAction(req.id, 'Rejected')}
+                  style={{ background: '#fef2f2', border: 'none', borderRadius: '0.75rem', padding: '0.6rem', cursor: 'pointer', color: '#ef4444' }}
+                >
+                  <X size={20} />
+                </button>
+                <button 
+                  onClick={() => handleAction(req.id, 'Approved')}
+                  style={{ background: '#ecfdf5', border: 'none', borderRadius: '0.75rem', padding: '0.6rem 1.25rem', cursor: 'pointer', color: '#059669', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  <Check size={20} /> Approve
+                </button>
+              </div>
+            ) : (
+              <div style={{ 
+                fontWeight: 800, 
+                fontSize: '0.8rem', 
+                textTransform: 'uppercase', 
+                letterSpacing: '0.05em',
+                color: req.status === 'Approved' ? '#059669' : '#ef4444'
+              }}>
+                {req.status}
+              </div>
+            )}
           </div>
         ))}
-        {reports.length === 0 && !loading && (
-          <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--text-muted)' }}>
-            <h3>All caught up!</h3>
-            <p>No pending reports to verify at the moment.</p>
-          </div>
-        )}
+      </div>
+
+      <div style={{ marginTop: '4rem', padding: '2rem', border: '1px dashed #e2e8f0', borderRadius: '1rem', textAlign: 'center' }}>
+        <ShieldCheck size={32} color="#94a3b8" style={{ marginBottom: '1rem' }} />
+        <p style={{ color: '#64748b', fontSize: '0.85rem' }}>
+          All approvals are logged and auditable by the Municipal Head Office.
+        </p>
       </div>
     </div>
   );
